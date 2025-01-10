@@ -59,7 +59,7 @@ const command: Command = {
 
       // Send confirmation message
       await interaction.reply({
-        content: `Permissions for all channels in category **${category.name}** have been synchronized based on **${referenceChannel.name}**.`,
+        content: `Permissions for all channels in category **${category.name}** have been synchronized based on **<#${referenceChannel.id}>**.`,
         ephemeral: true,
       });
     } catch (error) {
