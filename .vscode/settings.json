@@ -1,6 +1,0 @@
-{
-    "conventionalCommits.scopes": [
-        "commands",
-        "sync_perm"
-    ]
-}
