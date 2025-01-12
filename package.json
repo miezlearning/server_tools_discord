@@ -4,11 +4,11 @@
   "description": "Maintainable Discord Bot",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc",
-    "start": "node dist/index.js",
-    "dev": "ts-node src/index.ts",
-    "watch": "tsc -w"
-  },
+  "build": "tsc",
+  "deploy-commands": "node dist/deploy-commands.js",
+  "start": "node dist/index.js",
+  "dev": "npm run build && npm run deploy-commands && npm start"
+},
   "dependencies": {
     "axios": "^1.7.9",
     "discord.js": "^14.11.0",
