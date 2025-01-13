@@ -4,12 +4,13 @@
   "description": "Maintainable Discord Bot",
   "main": "dist/index.js",
   "scripts": {
-  "build": "tsc",
-  "deploy-commands": "node dist/deploy-commands.js",
-  "start": "node dist/index.js",
-  "dev": "npm run build && npm run deploy-commands && npm start"
-},
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts",
+    "watch": "tsc -w"
+  },
   "dependencies": {
+    "@google/generative-ai": "^0.21.0",
     "axios": "^1.7.9",
     "discord.js": "^14.11.0",
     "dotenv": "^16.3.1",
@@ -17,9 +18,14 @@
     "openai": "^4.78.1"
   },
   "devDependencies": {
-    "@types/axios": "^0.9.36",
-    "@types/node": "^20.4.1",
+    "@types/node": "^18.0.0",
     "ts-node": "^10.9.1",
-    "typescript": "^5.1.6"
+    "typescript": "^5.0.0"
+  },
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": ""
   }
 }
