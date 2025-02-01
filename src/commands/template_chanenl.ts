@@ -3,13 +3,14 @@ import {
   EmbedBuilder,
   PermissionFlagsBits,
   ChannelType,
+  GuildBasedChannel,
 } from 'discord.js';
 import { Command } from '../types';
 
 const command: Command = {
   data: new SlashCommandBuilder()
     .setName('createchannels')
-    .setDescription('Create multiple channels in bulk with custom template')
+    .setDescription('Create multiple channels in bulk with a custom template')
     .addStringOption((option) =>
       option
         .setName('template')
@@ -30,6 +31,18 @@ const command: Command = {
         .setDescription('Category ID where channels will be created')
         .setRequired(true)
     )
+    .addStringOption((option) =>
+        option
+          .setName('type')
+          .setDescription('Type of channel to create')
+          .setRequired(true)
+          .addChoices(
+            { name: 'Text', value: 'text' },
+            { name: 'Voice', value: 'voice' },
+            { name: 'Forum', value: 'forum' },
+            { name: 'Announcement', value: 'announcement' }
+          )
+      )
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageChannels),
 
   execute: async (interaction) => {
@@ -48,6 +61,7 @@ const command: Command = {
       const template = interaction.options.getString('template', true);
       const channelsInput = interaction.options.getString('channels', true);
       const categoryId = interaction.options.getString('category', true);
+      const channelType = interaction.options.getString('type', true);
 
       if (!template.includes('[nama_channel]')) {
         await interaction.reply({
@@ -66,8 +80,28 @@ const command: Command = {
         return;
       }
 
+       // Determine the ChannelType enum value
+        let channelTypeValue: ChannelType;
+        switch (channelType) {
+          case 'text':
+            channelTypeValue = ChannelType.GuildText;
+            break;
+          case 'voice':
+            channelTypeValue = ChannelType.GuildVoice;
+            break;
+          case 'forum':
+            channelTypeValue = ChannelType.GuildForum;
+            break;
+          case 'announcement':
+            channelTypeValue = ChannelType.GuildAnnouncement;
+            break;
+            default:
+            channelTypeValue = ChannelType.GuildText;
+            break;
+
+        }
+
       // Split channels by comma and handle spaces properly
-      // Split channels by comma and handle the new format "emoji|nama_channel"
       const channelsList = channelsInput.split(',').map((channel) => channel.trim());
 
       await interaction.deferReply({ ephemeral: true });
@@ -102,7 +136,7 @@ const command: Command = {
           // Create the channel
           const newChannel = await guild.channels.create({
             name: formattedName,
-            type: ChannelType.GuildText,
+            type: channelTypeValue,
             parent: categoryId,
             reason: `Bulk channel creation by ${interaction.user.tag}`,
           });
@@ -144,4 +178,4 @@ const command: Command = {
   },
 };
 
-export default command;
+export default command; 
