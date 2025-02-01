@@ -1,0 +1,147 @@
+{
+    "curriculum": {
+      "university": "Universitas Mulawarman",
+      "program": "Informatika",
+      "year": 2021,
+      "total_credits_required": 144,
+      "required_courses_credits": 126,
+      "elective_courses_min_credits": 18,
+      "semesters": [
+        {
+          "semester": 1,
+          "courses": [
+            {"code": "210901603W001", "name": "Pendidikan Agama* /Religion*", "credits": 3},
+            {"code": "210901602W002", "name": "Pendidikan Pancasila/ Pancasila", "credits": 2},
+            {"code": "210901603W003", "name": "Ilmu Sosial dan Budaya Dasar/Basic of Social and Cultural Science", "credits": 3},
+            {"code": "210901603W004", "name": "Kalkulus / Calculus", "credits": 3},
+            {"code": "210901603W005", "name": "Algoritma dan Pemrograman Dasar* / Basic of Algorithm and Programming", "credits": 3},
+            {"code": "210901603W006", "name": "Logika Informatika / Logic of Informatics", "credits": 3},
+            {"code": "210901602W007", "name": "Pengantar Teknologi Informasi / Introduction to Information Technology", "credits": 2},
+            {"code": "210901602W008", "name": "Bahasa Inggris 1 / English 1", "credits": 2},
+            {"code": "210901603W009", "name": "Fisika Dasar / Basic of Physics", "credits": 3}
+          ],
+          "total_credits": 24
+        },
+        {
+          "semester": 2,
+          "courses": [
+            {"code": "210901603W010", "name": "Algoritma dan Pemrograman Lanjut* / Advanced Algorithm and Programming", "credits": 3},
+            {"code": "210901603W011", "name": "Matematika Diskrit / Discrete Mathematics", "credits": 3},
+            {"code": "210901603W012", "name": "Sistem Digital / Digital System", "credits": 3},
+            {"code": "210901603W013", "name": "Jaringan Komputer* / Computer Network", "credits": 3},
+            {"code": "210901603W014", "name": "Metode Numerik / Numeric Method", "credits": 3},
+            {"code": "210901603W015", "name": "Bahasa Indonesia / Indonesian Language", "credits": 2},
+            {"code": "MU0000602W003", "name": "Pendidikan Kewarganegaraan / Citizenship", "credits": 2}
+          ],
+          "total_credits": 19
+        },
+        {
+          "semester": 3,
+          "courses": [
+            {"code": "210901603W016", "name": "Organisasi dan Arsitektur Komputer / Computer Organization and Architecture", "credits": 3},
+            {"code": "210901603W017", "name": "Keamanan Komputer / Computer Security", "credits": 3},
+            {"code": "210901603W018", "name": "Pemrograman Web* / Web Programming", "credits": 3},
+            {"code": "210901603W019", "name": "Aljabar Linear / Linear Algebra", "credits": 3},
+            {"code": "210901603W020", "name": "Basis Data* / Database", "credits": 3},
+            {"code": "210901603W021", "name": "Probabilitas dan Statistika* / Probability and Statistics", "credits": 3},
+            {"code": "210901603W022", "name": "Struktur Data / Data Structure", "credits": 3}
+          ],
+          "total_credits": 21
+        },
+        {
+          "semester": 4,
+          "courses": [
+            {"code": "210901603W023", "name": "Sistem Operasi (termasuk SOOS)* / Operating System", "credits": 3},
+            {"code": "210901603W024", "name": "Pemrograman Berorientasi Objek* / Object Oriented Programming", "credits": 3},
+            {"code": "210901603W026", "name": "Rekayasa Perangkat Lunak* (termasuk APSI) / Software Engineering", "credits": 3},
+            {"code": "210901603W025", "name": "Pemrograman Visual* / Visual Programming", "credits": 3},
+            {"code": "210901603W027", "name": "Sistem Terdistribusi / Distributed System", "credits": 3},
+            {"code": "210901603W028", "name": "Komputer dan Masyarakat / Computer and Society", "credits": 3},
+            {"code": "Pilihan 1", "name": "Elective 1", "credits": 3},
+            {"code": "Pilihan 2", "name": "Elective 2", "credits": 3}
+          ],
+          "total_credits": 24
+        },
+        {
+          "semester": 5,
+          "courses": [
+            {"code": "210901603W029", "name": "Jaringan Komputer Lanjut* / Advanced Computer Network", "credits": 3},
+            {"code": "210901603W030", "name": "Teori Bahasa dan Otomata / Theory of Language and Automata", "credits": 3},
+            {"code": "210901603W031", "name": "Grafika Komputer* / Computer Graphics", "credits": 3},
+            {"code": "210901603W032", "name": "Pemrograman Piranti Bergerak* / Mobile Programming", "credits": 3},
+            {"code": "210901603W033", "name": "Kecerdasan Buatan* / Artificial Intelligence", "credits": 3},
+            {"code": "210901603W034", "name": "Etika Profesi IT / Ethics of IT Profession", "credits": 3},
+            {"code": "210901603W035", "name": "Manajemen Proyek TI / IT Project Management", "credits": 3},
+            {"code": "Pilihan 3", "name": "Elective 3", "credits": 3}
+          ],
+          "total_credits": 24
+        },
+        {
+          "semester": 6,
+          "courses": [
+            {"code": "210901603W036", "name": "Wirausaha Teknologi/ Technopreneur", "credits": 3},
+            {"code": "210901603W037", "name": "Interaksi Manusia dan Komputer / Interaction of Human and Computer", "credits": 3},
+            {"code": "210901602W038", "name": "Bahasa Inggris 2 / English 2", "credits": 2},
+            {"code": "210901603W039", "name": "Metode Penelitian Riset TI /IT Research Methodology", "credits": 3},
+            {"code": "210901604W040", "name": "Kuliah Kerja Nyata / Community Service", "credits": 4},
+            {"code": "Pilihan 4", "name": "Elective 4", "credits": 3},
+            {"code": "Pilihan 5", "name": "Elective 5", "credits": 3},
+            {"code": "Pilihan 6", "name": "Elective 6", "credits": 3}
+          ],
+          "total_credits": 24
+        },
+        {
+          "semester": 7,
+          "courses": [
+            {"code": "210901602W041", "name": "Praktek Kerja Lapangan / Field Work", "credits": 2},
+            {"code": "210901602W042", "name": "Pra Skripsi / Pre Thesis (Seminar Proposal)", "credits": 2}
+          ],
+          "total_credits": 4
+        },
+        {
+          "semester": 8,
+          "courses": [
+            {"code": "210901604W055", "name": "Skripsi / Thesis (Seminar Hasil dan Sidang)", "credits": 4}
+          ],
+          "total_credits": 4
+        }
+      ],
+      "elective_courses": {
+        "odd_semester": [
+          {"code": "210901603P043", "name": "Sistem Pendukung Keputusan/ Decision Support System", "credits": 3},
+          {"code": "210901603P044", "name": "Jaringan Syaraf Tiruan / Artificial Neural Network", "credits": 3},
+          {"code": "210901603P045", "name": "Sistem Pakar / Expert System", "credits": 3},
+          {"code": "210901603P046", "name": "Pemrograman Berbasis Kerangka Kerja* / Framework-based Programming", "credits": 3},
+          {"code": "210901603P047", "name": "Pengolahan Citra* / Image Processing", "credits": 3},
+          {"code": "210901603P048", "name": "Sains Data*/ Data Science", "credits": 3},
+          {"code": "210901603P049", "name": "Animasi Komputer dan Pemodelan 3D* / Computer Animation and 3D Modelling", "credits": 3},
+          {"code": "210901603P050", "name": "Penelitian Berbasis Studi Tropis / Tropical Studies-Based Research", "credits": 3},
+          {"code": "210901603P051", "name": "Kota Cerdas / Smart City", "credits": 3},
+          {"code": "210901603P052", "name": "Teknologi Nirkabel* / Wireless Technology", "credits": 3},
+          {"code": "210901603P053", "name": "Forensik Digital dan Kejahatan Siber* / Digital Forensic dan Cyber Crime", "credits": 3},
+          {"code": "210901603P054", "name": "Ekonomi Digital, Bisnis Rintisan, Teknologi Sistem Keuangan / Digital Economy, Start up, and Fintech", "credits": 3},
+          {"code": "210901603P055", "name": "Pemrograman Web Lanjut* / Advanced Web Programming", "credits": 3},
+          {"code": "210901603P056", "name": "Komputasi Awan* / Cloud Computing", "credits": 3},
+          {"code": "210901603P057", "name": "Analisis Algoritma / Algorithm Analysis", "credits": 3},
+          {"code": "210901603P058", "name": "Kapita Selekta / Capita Selecta", "credits": 3}
+        ],
+        "even_semester": [
+          {"code": "210901603P059", "name": "Sistem Informasi Geografis* / Geographic Information System", "credits": 3},
+          {"code": "210901603P060", "name": "Robotika* / Robotics", "credits": 3},
+          {"code": "210901603P061", "name": "Penambangan Data / Data Mining", "credits": 3},
+          {"code": "210901603P062", "name": "Teknik Pengembangan Game* / Game Development Techniques", "credits": 3},
+          {"code": "210901603P063", "name": "Pemodelan dan Simulasi / Modelling and Simulation", "credits": 3},
+          {"code": "210901603P064", "name": "Layanan Awan* / Cloud Service", "credits": 3},
+          {"code": "210901603P065", "name": "Virtual and Augmented Reality", "credits": 3},
+          {"code": "210901603P066", "name": "Logika Samar / Fuzzy Logic", "credits": 3},
+          {"code": "210901603P067", "name": "Internet Kebendaan* / Internet of Things", "credits": 3},
+          {"code": "210901603P068", "name": "Teknologi Multimedia* / Multimedia Technology", "credits": 3},
+          {"code": "210901603P069", "name": "Kriptografi (termasuk Steganografi) / Cryptography", "credits": 3},
+          {"code": "210901603P070", "name": "Pengendali Mikro / Microcontroller*", "credits": 3},
+          {"code": "210901603P071", "name": "Visi Komputer / Computer Vision", "credits": 3},
+          {"code": "210901603P072", "name": "Pembelajaran Mesin / Machine Learning", "credits": 3},
+          {"code": "210901603W073", "name": "Basis Data Lanjut* / Advanced Database", "credits": 3}
+        ]
+      }
+    }
+  }

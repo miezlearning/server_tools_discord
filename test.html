@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QRIS Converter with List</title>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode.build@1.4.2/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen p-8">
+    <div class="max-w-4xl mx-auto">
+        <!-- Form Input -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h1 class="text-2xl font-bold mb-6 text-center">QRIS Converter</h1>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Upload QR -->
+                <div>
+                    <label class="block mb-2 font-medium">Upload QRIS Image</label>
+                    <input type="file" id="qrisUpload" accept="image/*" class="border p-2 rounded w-full">
+                </div>
+
+                <!-- Input Data -->
+                <div>
+                    <label class="block mb-2 font-medium">QRIS Data</label>
+                    <textarea id="qrisData" rows="5" class="border p-2 rounded w-full"></textarea>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                <!-- Nominal -->
+                <div>
+                    <label class="block mb-2 font-medium">Nominal</label>
+                    <input type="number" id="amount" class="border p-2 rounded w-full">
+                </div>
+
+                <!-- Fee Type -->
+                <div>
+                    <label class="block mb-2 font-medium">Biaya Layanan</label>
+                    <select id="feeType" class="border p-2 rounded w-full">
+                        <option value="none">Tidak Ada</option>
+                        <option value="rupiah">Rupiah</option>
+                        <option value="percent">Persen</option>
+                    </select>
+                </div>
+
+                <!-- Fee Amount -->
+                <div>
+                    <label class="block mb-2 font-medium">Jumlah Biaya</label>
+                    <input type="number" id="feeAmount" class="border p-2 rounded w-full" disabled>
+                </div>
+            </div>
+
+            <button onclick="showPreview()" class="bg-blue-500 text-white px-4 py-2 rounded w-full mt-6 hover:bg-blue-600">
+                Generate Preview
+            </button>
+        </div>
+
+        <!-- Preview Section -->
+        <div id="preview" class="bg-white rounded-lg shadow-md p-6 mb-8 hidden">
+            <h2 class="text-xl font-bold mb-4 text-center">Preview QRIS Dinamis</h2>
+            
+            <div class="flex flex-col md:flex-row gap-6 items-center">
+                <div id="previewQrcode" class="flex-shrink-0"></div>
+                
+                <div class="flex-grow">
+                    <div class="mb-3">
+                        <span class="font-medium">Merchant:</span>
+                        <span id="previewMerchant" class="ml-2"></span>
+                    </div>
+                    <div class="mb-3">
+                        <span class="font-medium">Nominal:</span>
+                        <span id="previewAmount" class="ml-2"></span>
+                    </div>
+                    <div class="mb-3">
+                        <span class="font-medium">Biaya:</span>
+                        <span id="previewFee" class="ml-2"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex gap-4 mt-6 justify-center">
+                <button onclick="confirmAdd()" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                    Konfirmasi & Tambahkan ke Daftar
+                </button>
+                <button onclick="cancelAdd()" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+                    Batalkan
+                </button>
+            </div>
+        </div>
+
+        <!-- Daftar QRIS -->
+        <div id="listSection" class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-bold mb-4 text-center">Daftar QRIS Dinamis</h2>
+            <div id="qrList" class="space-y-4">
+                <!-- Entri QRIS akan muncul di sini -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentQRData = null;
+        let currentQRImage = null;
+
+        // Load saved data
+        window.addEventListener('DOMContentLoaded', () => {
+            loadSavedQRs();
+        });
+
+        // Toggle fee amount input
+        document.getElementById('feeType').addEventListener('change', function(e) {
+            document.getElementById('feeAmount').disabled = e.target.value === 'none';
+        });
+
+        // Show preview
+        function showPreview() {
+            const qrisData = document.getElementById('qrisData').value;
+            const amount = document.getElementById('amount').value;
+            const feeType = document.getElementById('feeType').value;
+            const feeAmount = document.getElementById('feeAmount').value;
+
+            // Generate QR data
+            currentQRData = generateQRData(qrisData, amount, feeType, feeAmount);
+            currentQRImage = generateQRImage(currentQRData);
+
+            // Show preview
+            document.getElementById('preview').classList.remove('hidden');
+            document.getElementById('previewMerchant').textContent = getMerchantName(qrisData);
+            document.getElementById('previewAmount').textContent = `Rp${parseInt(amount).toLocaleString()}`;
+            document.getElementById('previewFee').textContent = feeType === 'none' ? 
+                'Tidak ada biaya' : 
+                `${parseInt(feeAmount).toLocaleString()}${feeType === 'rupiah' ? ' Rp' : '%'}`;
+
+            // Show QR preview
+            document.getElementById('previewQrcode').innerHTML = '';
+            new QRCode(document.getElementById('previewQrcode'), {
+                text: currentQRData,
+                width: 150,
+                height: 150
+            });
+        }
+
+        // Confirm add to list
+        function confirmAdd() {
+            addQRToList({
+                data: currentQRData,
+                merchant: getMerchantName(document.getElementById('qrisData').value),
+                amount: document.getElementById('amount').value,
+                fee: {
+                    type: document.getElementById('feeType').value,
+                    amount: document.getElementById('feeAmount').value
+                },
+                qrImage: currentQRImage
+            });
+            
+            cancelAdd();
+        }
+
+        // Cancel add
+        function cancelAdd() {
+            document.getElementById('preview').classList.add('hidden');
+            resetForm();
+        }
+
+        // Add to list
+        function addQRToList(qrData) {
+            const listItem = document.createElement('div');
+            listItem.className = 'border rounded p-4 flex items-center justify-between';
+            listItem.innerHTML = `
+                <div class="flex items-center gap-4">
+                    <div class="qr-image" style="width: 80px; height: 80px;"></div>
+                    <div>
+                        <div class="font-medium">${qrData.merchant}</div>
+                        <div class="text-sm">Nominal: Rp${parseInt(qrData.amount).toLocaleString()}</div>
+                        ${qrData.fee.type !== 'none' ? 
+                            `<div class="text-sm">Biaya: ${qrData.fee.amount}${qrData.fee.type === 'rupiah' ? ' Rp' : '%'}</div>` : ''}
+                    </div>
+                </div>
+                <button onclick="downloadThisQR('${qrData.data}')" class="bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600">
+                    Download
+                </button>
+            `;
+
+            // Generate QR image for list
+            new QRCode(listItem.querySelector('.qr-image'), {
+                text: qrData.data,
+                width: 80,
+                height: 80
+            });
+
+            document.getElementById('qrList').prepend(listItem);
+            saveQRData(qrData);
+        }
+
+        // Helper functions
+        function generateQRData(qrisData, amount, feeType, feeAmount) {
+            let data = qrisData.substring(0, qrisData.length - 4);
+            data = data.replace("010211", "010212");
+            const parts = data.split("5802ID");
+            
+            let amountSegment = `54${amount.length.toString().padStart(2, '0')}${amount}`;
+            
+            if (feeType !== 'none') {
+                const feeCode = feeType === 'rupiah' ? '56' : '57';
+                amountSegment += `5502${feeCode}${feeAmount.length.toString().padStart(2, '0')}${feeAmount}`;
+            }
+            
+            const newQRIS = `${parts[0]}${amountSegment}5802ID${parts[1]}`;
+            return newQRIS + calculateCRC16(newQRIS);
+        }
+
+        function generateQRImage(data) {
+            const canvas = document.createElement('canvas');
+            new QRCode(canvas, { text: data, width: 150, height: 150 });
+            return canvas.toDataURL();
+        }
+
+        function getMerchantName(qrisData) {
+            const merchantPart = qrisData.match(/59\d{2}(.+?)60/);
+            return merchantPart ? merchantPart[1].slice(2) : 'Unknown Merchant';
+        }
+
+        function calculateCRC16(data) {
+            let crc = 0xffff;
+            for (let i = 0; i < data.length; i++) {
+                crc ^= data.charCodeAt(i) << 8;
+                for (let j = 0; j < 8; j++) {
+                    crc = crc & 0x8000 ? (crc << 1) ^ 0x1021 : crc << 1;
+                }
+            }
+            return (crc & 0xffff).toString(16).toUpperCase().padStart(4, '0');
+        }
+
+        function resetForm() {
+            document.getElementById('qrisData').value = '';
+            document.getElementById('amount').value = '';
+            document.getElementById('feeType').value = 'none';
+            document.getElementById('feeAmount').value = '';
+            document.getElementById('qrisUpload').value = '';
+        }
+
+        function downloadThisQR(data) {
+            const canvas = document.createElement('canvas');
+            new QRCode(canvas, { text: data, width: 200, height: 200 });
+            const link = document.createElement('a');
+            link.download = 'qris-dinamis.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+
+        // LocalStorage management
+        function saveQRData(qrData) {
+            const saved = JSON.parse(localStorage.getItem('qrisList') || '[]');
+            saved.unshift(qrData);
+            localStorage.setItem('qrisList', JSON.stringify(saved));
+        }
+
+        function loadSavedQRs() {
+            const saved = JSON.parse(localStorage.getItem('qrisList') || '[]');
+            saved.forEach(qrData => addQRToList(qrData));
+        }
+    </script>
+</body>
+</html>
