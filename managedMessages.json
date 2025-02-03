@@ -1,0 +1,36 @@
+[
+  {
+    "channelId": "1335576254505816074",
+    "messageId": "1335616663005036717",
+    "content": "",
+    "embeds": [
+      {
+        "color": 2829617,
+        "title": "Status Toko",
+        "description": "Status toko akan ditampilkan di sini.",
+        "image": {
+          "url": "https://media.discordapp.net/attachments/1335194503249788983/1335591893542637579/Status_THINKER_HUB.png?ex=67a0ba61&is=679f68e1&hm=fdfd599d8f65d8f793ae0bf2a6d7184fd9c95628b5c549abb6f2fba34295a41d&=&format=webp&quality=lossless&width=687&height=343"
+        }
+      }
+    ],
+    "components": [
+      {
+        "type": 1,
+        "components": [
+          {
+            "type": 2,
+            "custom_id": "shopstatus_open",
+            "label": "Open Shop",
+            "style": 3
+          },
+          {
+            "type": 2,
+            "custom_id": "shopstatus_close",
+            "label": "Close Shop",
+            "style": 4
+          }
+        ]
+      }
+    ]
+  }
+]

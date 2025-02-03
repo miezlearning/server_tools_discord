@@ -2,6 +2,9 @@ import { Client, Collection, Events, GatewayIntentBits } from 'discord.js';
 import { config } from 'dotenv';
 import { loadCommands } from './handlers/commandHandler';
 import { Command } from './types';
+import { loadButtonHandler } from './handlers/buttonHandler';
+import { loadMessageHandler } from './handlers/messageHandler';
+
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 config();
@@ -90,5 +93,7 @@ client.on(Events.MessageCreate, async (message) => {
 });
 
 loadCommands(client);
+loadButtonHandler(client);
+loadMessageHandler(client);
 
 client.login(process.env.DISCORD_TOKEN);
