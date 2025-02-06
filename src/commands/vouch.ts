@@ -49,7 +49,7 @@ const command: Command = {
 
         if (interaction.channelId !== allowedChannelId) {
             await interaction.reply({
-                content: `# <:thinker_cross:1333560082859954288> Error \n-# Command ini hanya bisa digunakan di channel <#${allowedChannelId}>.`,
+                content: `# <:thinker_cross:1333560082859954288> Error \n-# Perintah ini hanya bisa digunakan di channel <#${allowedChannelId}>.`,
                 ephemeral: true,
             });
             return;
