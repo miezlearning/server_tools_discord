@@ -181,7 +181,7 @@ import {
 
         // Create embed
         const embed = new EmbedBuilder()
-            .setTitle('✨ QRIS Payment ✨')
+            .setTitle('✨ QRIS Thinker Store ✨')
             .setDescription(`Berikut adalah QRIS pembayaranmu!`)
             .setThumbnail(interaction.user.displayAvatarURL())
             .setImage('attachment://dynamic_qris.png')

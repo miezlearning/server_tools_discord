@@ -113,18 +113,21 @@ const command: Command = {
         const namaProdukInput = new TextInputBuilder()
             .setCustomId('nama_produk')
             .setLabel('Nama Produk')
+            .setPlaceholder("NETFLIX 1P1U 1 Bulan")
             .setStyle(TextInputStyle.Short)
             .setRequired(true);
 
         const ratingInput = new TextInputBuilder()
             .setCustomId('rating')
             .setLabel('Rating (1-5)')
+            .setPlaceholder("5")
             .setStyle(TextInputStyle.Short)
             .setRequired(true);
 
         const pesanInput = new TextInputBuilder()
             .setCustomId('pesan')
             .setLabel('Pesan (Opsional)')
+            .setPlaceholder("Kerenn... FAST RESPOND!!")
             .setStyle(TextInputStyle.Paragraph)
             .setRequired(false);
 
@@ -132,6 +135,7 @@ const command: Command = {
             .setCustomId('gambar')
             .setLabel('URL Gambar (Opsional)')
             .setStyle(TextInputStyle.Short)
+            .setPlaceholder("https://example.com/image.jpg")
             .setRequired(false);
         
 
