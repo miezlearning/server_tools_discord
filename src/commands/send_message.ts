@@ -11,14 +11,14 @@ const command: Command = {
         .setRequired(true)
     )
     .addStringOption(option =>
-      option.setName('channel')
-        .setDescription('ID atau nama channel tujuan dalam kategori (kosongkan untuk kirim ke semua channel)')
-        .setRequired(false)
-    )
-    .addStringOption(option =>
       option.setName('message')
         .setDescription('Pesan yang akan dikirim')
         .setRequired(true)
+    )
+    .addStringOption(option =>
+      option.setName('channel')
+        .setDescription('ID atau nama channel tujuan dalam kategori (kosongkan untuk kirim ke semua channel)')
+        .setRequired(false)
     )
     .addAttachmentOption(option =>
       option.setName('attachment')
