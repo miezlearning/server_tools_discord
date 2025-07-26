@@ -12,8 +12,8 @@ const command: Command = {
     )
     .addStringOption(option =>
       option.setName('channel')
-        .setDescription('ID atau nama channel tujuan dalam kategori')
-        .setRequired(true)
+        .setDescription('ID atau nama channel tujuan dalam kategori (kosongkan untuk kirim ke semua channel)')
+        .setRequired(false)
     )
     .addStringOption(option =>
       option.setName('message')
@@ -37,7 +37,7 @@ const command: Command = {
       await interaction.deferReply({ ephemeral: true });
 
       const categoryInput = interaction.options.getString('category', true);
-      const channelInput = interaction.options.getString('channel', true);
+      const channelInput = interaction.options.getString('channel', false); // Bisa null
       const messageContent = interaction.options.getString('message', true);
       const attachment = interaction.options.getAttachment('attachment');
       const useEmbed = interaction.options.getBoolean('embed') ?? false;
@@ -74,34 +74,55 @@ const command: Command = {
         return;
       }
 
-      // Cari channel dalam kategori berdasarkan ID atau nama
-      let targetChannel: TextChannel | null = null;
+      // Cari channel dalam kategori berdasarkan ID atau nama (jika channelInput ada)
+      let targetChannels: TextChannel[] = [];
 
-      // Coba cari berdasarkan ID terlebih dahulu
-      if (/^\d+$/.test(channelInput)) {
-        const channelById = guild.channels.cache.get(channelInput);
-        if (channelById && 
-            channelById.isThread() === false && 
-            channelById.type === 0 && // TextChannel type = 0
-            channelById.parentId === targetCategory.id) {
-          targetChannel = channelById as TextChannel;
+      if (channelInput) {
+        // Jika channel spesifik diberikan, cari satu channel
+        let targetChannel: TextChannel | null = null;
+
+        // Coba cari berdasarkan ID terlebih dahulu
+        if (/^\d+$/.test(channelInput)) {
+          const channelById = guild.channels.cache.get(channelInput);
+          if (channelById && 
+              channelById.isThread() === false && 
+              channelById.type === 0 && // TextChannel type = 0
+              channelById.parentId === targetCategory.id) {
+            targetChannel = channelById as TextChannel;
+          }
         }
-      }
 
-      // Jika tidak ditemukan berdasarkan ID, cari berdasarkan nama dalam kategori
-      if (!targetChannel) {
-        const channelByName = guild.channels.cache.find(channel => 
-          channel.name.toLowerCase() === channelInput.toLowerCase() && 
+        // Jika tidak ditemukan berdasarkan ID, cari berdasarkan nama dalam kategori
+        if (!targetChannel) {
+          const channelByName = guild.channels.cache.find(channel => 
+            channel.name.toLowerCase() === channelInput.toLowerCase() && 
+            channel.isThread() === false && 
+            channel.type === 0 &&
+            channel.parentId === targetCategory.id
+          ) as TextChannel;
+          targetChannel = channelByName;
+        }
+
+        if (!targetChannel) {
+          await interaction.editReply(`❌ Channel "${channelInput}" tidak ditemukan dalam kategori "${targetCategory.name}"!`);
+          return;
+        }
+
+        targetChannels = [targetChannel];
+      } else {
+        // Jika channel tidak diberikan, ambil semua text channel dalam kategori
+        const allChannelsInCategory = guild.channels.cache.filter(channel => 
+          channel.parentId === targetCategory.id && 
           channel.isThread() === false && 
-          channel.type === 0 &&
-          channel.parentId === targetCategory.id
-        ) as TextChannel;
-        targetChannel = channelByName;
-      }
+          channel.type === 0 // TextChannel
+        ) as any;
 
-      if (!targetChannel) {
-        await interaction.editReply(`❌ Channel "${channelInput}" tidak ditemukan dalam kategori "${targetCategory.name}"!`);
-        return;
+        targetChannels = Array.from(allChannelsInCategory.values()) as TextChannel[];
+
+        if (targetChannels.length === 0) {
+          await interaction.editReply(`❌ Tidak ada channel text yang ditemukan dalam kategori "${targetCategory.name}"!`);
+          return;
+        }
       }
 
       // Persiapkan pesan
@@ -124,11 +145,34 @@ const command: Command = {
         messageOptions.content = messageContent;
       }
 
-      // Kirim pesan ke channel target
-      await targetChannel.send(messageOptions);
+      // Kirim pesan ke channel target(s)
+      let sentCount = 0;
+      let failedChannels: string[] = [];
+
+      for (const channel of targetChannels) {
+        try {
+          await channel.send(messageOptions);
+          sentCount++;
+        } catch (error) {
+          console.error(`Failed to send message to ${channel.name}:`, error);
+          failedChannels.push(channel.name);
+        }
+      }
 
       // Konfirmasi berhasil
-      const successMessage = `✅ Pesan berhasil dikirim ke ${targetChannel} dalam kategori **${targetCategory.name}**!`;
+      let successMessage: string;
+      
+      if (targetChannels.length === 1) {
+        // Pesan untuk satu channel
+        successMessage = `✅ Pesan berhasil dikirim ke ${targetChannels[0]} dalam kategori **${targetCategory.name}**!`;
+      } else {
+        // Pesan untuk multiple channels
+        successMessage = `✅ Pesan berhasil dikirim ke **${sentCount}** channel dalam kategori **${targetCategory.name}**!`;
+        
+        if (failedChannels.length > 0) {
+          successMessage += `\n⚠️ Gagal mengirim ke: ${failedChannels.join(', ')}`;
+        }
+      }
       
       if (attachment) {
         await interaction.editReply(`${successMessage}\n📎 Dengan attachment: ${attachment.name}`);
