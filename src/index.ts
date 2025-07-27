@@ -44,11 +44,23 @@ client.on(Events.InteractionCreate, async (interaction) => {
   try {
     await command.execute(interaction);
   } catch (error) {
-    console.error(error);
-    await interaction.reply({
-      content: 'There was an error executing this command!',
-      ephemeral: true,
-    });
+    console.error('Command execution error:', error);
+    
+    // More robust error handling
+    try {
+      if (interaction.deferred) {
+        await interaction.editReply({
+          content: '❌ Terjadi error saat menjalankan command!'
+        });
+      } else if (!interaction.replied) {
+        await interaction.reply({
+          content: '❌ Terjadi error saat menjalankan command!',
+          flags: [4096], // MessageFlags.Ephemeral
+        });
+      }
+    } catch (responseError) {
+      console.error('Failed to send error response:', responseError);
+    }
   }
 });
 
