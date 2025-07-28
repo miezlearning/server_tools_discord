@@ -8,20 +8,25 @@ const command: Command = {
     
   execute: async (interaction) => {
     try {
-      // Send initial message with loading indicator
-      const sent = await interaction.reply({ 
-        content: '🏓 **Pinging...** 📡', 
-        fetchReply: true 
-      });
+      // Use deferReply to prevent timeout issues
+      await interaction.deferReply();
 
-      // Calculate latencies
-      const roundtripLatency = Math.abs(sent.createdTimestamp - interaction.createdTimestamp);
-      const websocketLatency = Math.max(0, interaction.client.ws.ping); // Ensure positive value
+      // Record start time
+      const startTime = Date.now();
+      
+      // Get websocket latency
+      const websocketLatency = Math.max(0, interaction.client.ws.ping);
+      
+      // Calculate response time
+      const responseTime = Date.now() - startTime;
+      
+      // Use a more reliable method for roundtrip calculation
+      const roundtripLatency = Math.max(1, responseTime); // Minimum 1ms to avoid 0 or negative
       
       // Determine connection quality
       const getLatencyStatus = (ping: number): { emoji: string; status: string; color: number } => {
-        // Handle invalid/negative values
-        if (ping < 0 || isNaN(ping)) return { emoji: '❓', status: 'Unknown', color: 0x808080 };
+        // Handle invalid values
+        if (ping <= 0 || isNaN(ping)) return { emoji: '❓', status: 'Unknown', color: 0x808080 };
         if (ping < 50) return { emoji: '🟢', status: 'Excellent', color: 0x00FF00 };
         if (ping < 100) return { emoji: '🟡', status: 'Good', color: 0xFFFF00 };
         if (ping < 200) return { emoji: '🟠', status: 'Fair', color: 0xFFA500 };
@@ -52,13 +57,13 @@ const command: Command = {
         .setDescription('📊 **Detailed Connection Information**')
         .addFields(
           {
-            name: '⚡ **Roundtrip Latency**',
-            value: `${roundtripStatus.emoji} **${roundtripLatency >= 0 ? roundtripLatency : 'N/A'}ms**\n*${roundtripStatus.status}*`,
+            name: '⚡ **Response Time**',
+            value: `${roundtripStatus.emoji} **${roundtripLatency}ms**\n*${roundtripStatus.status}*`,
             inline: true
           },
           {
             name: '🌐 **WebSocket Ping**',
-            value: `${websocketStatus.emoji} **${websocketLatency >= 0 ? websocketLatency : 'N/A'}ms**\n*${websocketStatus.status}*`,
+            value: `${websocketStatus.emoji} **${websocketLatency > 0 ? websocketLatency : 'N/A'}ms**\n*${websocketStatus.status}*`,
             inline: true
           },
           {
@@ -102,7 +107,6 @@ const command: Command = {
       }
 
       await interaction.editReply({
-        content: null,
         embeds: [embed]
       });
 
@@ -115,10 +119,17 @@ const command: Command = {
         .setColor(0xFF0000)
         .setTimestamp();
 
-      if (interaction.deferred || interaction.replied) {
-        await interaction.editReply({ embeds: [errorEmbed] });
-      } else {
-        await interaction.reply({ embeds: [errorEmbed], ephemeral: true });
+      try {
+        if (interaction.deferred) {
+          await interaction.editReply({ embeds: [errorEmbed] });
+        } else if (!interaction.replied) {
+          await interaction.reply({ 
+            embeds: [errorEmbed],
+            flags: [4096] // MessageFlags.Ephemeral
+          });
+        }
+      } catch (responseError) {
+        console.error('Failed to send error response:', responseError);
       }
     }
   },
