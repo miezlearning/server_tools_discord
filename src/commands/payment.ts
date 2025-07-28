@@ -18,7 +18,7 @@ const PAYMENT_METHODS = {
     merchantName: 'THINKER STORE, PALARAN',
     nmid: 'ID1024351849715',
     terminalId: 'A01',
-    imagePath: path.join(__dirname, '../images/qris.png'),
+    imagePath: path.join(__dirname, '../images/qris.jpg'),
     color: 0xFF6B6B,
     icon: '🏛️',
     description: 'Satu QR untuk semua e-wallet & bank'
