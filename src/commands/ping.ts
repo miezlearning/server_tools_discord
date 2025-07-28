@@ -15,11 +15,13 @@ const command: Command = {
       });
 
       // Calculate latencies
-      const roundtripLatency = sent.createdTimestamp - interaction.createdTimestamp;
-      const websocketLatency = interaction.client.ws.ping;
+      const roundtripLatency = Math.abs(sent.createdTimestamp - interaction.createdTimestamp);
+      const websocketLatency = Math.max(0, interaction.client.ws.ping); // Ensure positive value
       
       // Determine connection quality
       const getLatencyStatus = (ping: number): { emoji: string; status: string; color: number } => {
+        // Handle invalid/negative values
+        if (ping < 0 || isNaN(ping)) return { emoji: '❓', status: 'Unknown', color: 0x808080 };
         if (ping < 50) return { emoji: '🟢', status: 'Excellent', color: 0x00FF00 };
         if (ping < 100) return { emoji: '🟡', status: 'Good', color: 0xFFFF00 };
         if (ping < 200) return { emoji: '🟠', status: 'Fair', color: 0xFFA500 };
@@ -51,12 +53,12 @@ const command: Command = {
         .addFields(
           {
             name: '⚡ **Roundtrip Latency**',
-            value: `${roundtripStatus.emoji} **${roundtripLatency}ms**\n*${roundtripStatus.status}*`,
+            value: `${roundtripStatus.emoji} **${roundtripLatency >= 0 ? roundtripLatency : 'N/A'}ms**\n*${roundtripStatus.status}*`,
             inline: true
           },
           {
             name: '🌐 **WebSocket Ping**',
-            value: `${websocketStatus.emoji} **${websocketLatency}ms**\n*${websocketStatus.status}*`,
+            value: `${websocketStatus.emoji} **${websocketLatency >= 0 ? websocketLatency : 'N/A'}ms**\n*${websocketStatus.status}*`,
             inline: true
           },
           {
